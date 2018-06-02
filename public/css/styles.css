@@ -1,0 +1,60 @@
+html, body {
+    width: 100%;
+    height: 100%;
+}
+.site {
+    position: relative;
+}
+.nick-back {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    opacity: 0.9;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+}
+#nicknameform {
+    width: 90%;
+    max-width: 500px;
+    margin-top: 20%;
+}
+#nicknameform label {
+    font-family: 'Jua', sans-serif;
+    font-size: 1.3em;
+    color: #5a5a5a;
+    padding: 0.5em;
+}
+.nick-panel {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.input-pattern {
+    padding: 0.2em;
+    border: 2px solid #dddddd;
+    border-radius: 2px;
+    width: 70%;
+    max-width: 240px;
+}
+.btns {
+    border: 1px solid #dddddd;
+    border-radius: 2px;
+    width: 75px;
+    height: 33px;
+    background-color: #f2f2f2;
+    color: #757575;
+    box-shadow: 1px 1px 1px grey;
+    font-family: arial,sans-serif;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin: 1em;
+    cursor: pointer;
+}
+#private-panel {
+    display: none;
+}
