@@ -234,3 +234,9 @@ html, body {
 #lobby:hover {
     cursor: pointer;
 }
+.own-private {
+    text-align: right;
+}
+.own-private-wrap {
+    justify-content: flex-end;
+}

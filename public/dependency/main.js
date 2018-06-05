@@ -77,7 +77,7 @@ $(document).ready(function(){
        let chatter_id = $("#private-wrap").data()['id'];
        let chatter = $("#private-wrap").text();
        socket.emit("private_msg", [msg,chatter_id]);
-       $("#conversation").append(`<div class="private-chatter"><p class="private-msg-name"><i>you whispered ${chatter}</i></p><div class="private-contents-wrap"><p class="private-msg-contents">${msg}</p></div></div>`);
+       $("#conversation").append(`<div class="own-private"><p class="private-msg-name"><i>you whispered ${chatter}</i></p><div class="private-contents-wrap own-private-wrap"><p class="private-msg-contents">${msg}</p></div></div>`);
        $(".chat-window").scrollTop($(".chat-window")[0].scrollHeight);
        $("#private").val("");
        return false;
@@ -88,7 +88,7 @@ $(document).ready(function(){
         $("#msgform").css("display", "flex");
     });
     socket.on("private_msg", function(data) {
-        $("#conversation").append(`<div class="private-chatter"><p class="private-msg-name"><i>whisper from <span style="color: ${data[2]};">${data[1]}</span></i></p><div class="private-contents-wrap"><p class="private-msg-contents">${data[0]}</p></div></div>`);
+        $("#conversation").append(`<div><p class="private-msg-name"><i>whisper from <span style="color: ${data[2]};">${data[1]}</span></i></p><div class="private-contents-wrap"><p class="private-msg-contents">${data[0]}</p></div></div>`);
         $(".chat-window").scrollTop($(".chat-window")[0].scrollHeight);
     });
     
