@@ -6,8 +6,14 @@ $(document).ready(function(){
     $("#online").on('click', 'li a', function(e) {
             e.preventDefault();
             let user = $(this).text();
-            $("#private_chatter").text(user);
-            socket.emit("private", $(this).attr("href").slice(1));
+            if (user != $("#you").text()) {
+                let chatter_id = $(this).attr("href").slice(1);
+                $("#private_chatter").html(`<span id="private-wrap" style="font-size: 1em; font-weight: bold;" data-id="${chatter_id}">${user}</span>`);
+                $("#privateform").css("display", "flex");
+                $("#msgform").css("display", "none");
+            } else {
+                return false;
+            }
     });
     //login info to client only
     $('#nicknameform').submit(function(){
@@ -20,23 +26,27 @@ $(document).ready(function(){
     });
     socket.on("login_success", function(name) {
         $("#nick-back").css("display", 'none');
-        $("#nick").append($("<h6>").text(name));
-        $("#conversation").append($("<h6>").text('You joined the chatroom'));
+        $(".nick").html(`<b>${name}</b>`);
+        $("#conversation").append($("<h6>").text('You (' + name + ') joined the chatroom'));
+        $(".chat-window").scrollTop($(".chat-window")[0].scrollHeight);
     });
     //info to everyone connected
     socket.on("login_message", function(msg) {
-        $("#conversation").append($("<h6>").text(msg));
+        $("#conversation").append(msg);
+        $(".chat-window").scrollTop($(".chat-window")[0].scrollHeight);
     });
     //chatting
     $('#msgform').submit(function(){
-        let msg = $('#msgContent').val();
+        let msg = $('#public').val();
         socket.emit("chat_message", msg);
-        $('#msgContent').val("");
-        $("#conversation").append($("<p>").text(msg));
+        $('#public').val("");
+        $("#conversation").append(`<div class="own-msg"><p>${msg}</p></div>`);
+        $(".chat-window").scrollTop($(".chat-window")[0].scrollHeight);
         return false;
     });
-    socket.on("chat_message", function(msg) {
-        $("#conversation").append($("<p>").text(msg));
+    socket.on("chat_message", function(data) {
+        $("#conversation").append(`<div class="other-msg"><p style="color: ${data[2]};" class="other-msg-name" >${data[1]} :</p><p class="other-msg-contents">${data[0]}</p></div>`);
+        $(".chat-window").scrollTop($(".chat-window")[0].scrollHeight);
     });
     //whos typing
     $('.msg-input').on('input', function(){
@@ -45,8 +55,9 @@ $(document).ready(function(){
     $('.msg-input').on('focusout', function(){
         socket.emit("notyping");
     });
-    socket.on("typing", function(msg) {
-        $("#typing").html($("<p>").text(msg));
+    socket.on("typing", function(data) {
+        $("#typing").html(`<p><span style="color: ${data[1]};">${data[0]}</span> is typing...</p>`);
+        $(".chat-window").scrollTop($(".chat-window")[0].scrollHeight);
     });
     socket.on("notyping", function() {
         $("#typing").empty();
@@ -56,22 +67,29 @@ $(document).ready(function(){
         let onlines = "";
         people = Object.entries(people);
         people.forEach(function(user) {
-            onlines += (`<li><a class="onlineUser" href="/${user[0]}">${user[1]}</a></li>`);
+            onlines += (`<li><a class="onlineUser" href="/${user[0]}">${user[1][0]}</a></li>`);
         });
         $("#online").html(onlines);
     });
     // private chat
-    socket.on("private", function(){
-        $("#private-panel").css("display", "block");
-    });
-    $("#private-panel").submit(function(){
+    $("#privateform").submit(function(){
        let msg = $("#private").val();
-       socket.emit("private_msg", msg);
-       $("#conversation").append($("<p>").text(msg));
+       let chatter_id = $("#private-wrap").data()['id'];
+       let chatter = $("#private-wrap").text();
+       socket.emit("private_msg", [msg,chatter_id]);
+       $("#conversation").append(`<div class="private-chatter"><p class="private-msg-name"><i>you whispered ${chatter}</i></p><div class="private-contents-wrap"><p class="private-msg-contents">${msg}</p></div></div>`);
+       $(".chat-window").scrollTop($(".chat-window")[0].scrollHeight);
        $("#private").val("");
        return false;
     });
-    socket.on("private_msg", function(msg) {
-        $("#conversation").append($("<p>").text(msg));
+    $("#lobby").click(function(){
+        $("#private").val("");
+        $("#privateform").css("display", "none");
+        $("#msgform").css("display", "flex");
     });
+    socket.on("private_msg", function(data) {
+        $("#conversation").append(`<div class="private-chatter"><p class="private-msg-name"><i>whisper from <span style="color: ${data[2]};">${data[1]}</span></i></p><div class="private-contents-wrap"><p class="private-msg-contents">${data[0]}</p></div></div>`);
+        $(".chat-window").scrollTop($(".chat-window")[0].scrollHeight);
+    });
+    
 });

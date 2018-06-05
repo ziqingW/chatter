@@ -1,36 +1,55 @@
-{% extends 'base.html' %}
-{% block title %}
+{% extends 'base.html' %} {% block title %}
 <title>Main room</title>
-{% endblock %}
-{% block contents %}
-<div class="container">
-    <ul id="online"></ul>
-    <div id="conversation"></div>
-    <div id="typing"></div>
-    <form id="msgform" action="">
-        <h6 id="nick">{{ nickname }}</h6>
-        <input type="text" class="msg-input" id="msgContent" required>
-        <button id="msg_btn">Send</button>
-    </form>
-    <form id="private-panel">
-        <h6 id="private_chatter"></h6>
-        <input class="msg-input" id="private" type="text" required>
-        <button id="private_btn">Send</button>
-    </form>
+{% endblock %} {% block contents %}
+<header class="text-center banner">
+    <h1>Chatter <span><i>ver 1.0</i></span></h1>
+</header>
+<div class="main">
+    <div class="people-panel">
+        <p id="lobby"><b>Main</b></p>
+        <ul id="online"></ul>
+    </div>
+    <div class="chat-window">
+        <div id="conversation"></div>
+        <div id="typing"></div>
+    </div>
 </div>
+<div class="msg-panel">
+<form id="msgform">
+    <h6 class="nick"></h6>
+        <div class="input-msg-panel">
+            <div style="display: flex;">
+            <input type="text" class="msg-input" id="public" required>
+            <button class="msg_btn">Send</button>
+            </div>
+            <p style="text-align: left; font-size: 0.9em;">Talk to everyone</p>
+        </div>
+</form>
+
+<form id="privateform">
+    <h6 class="nick" id="you"></h6>
+    <div class="input-msg-panel">
+        <div style="display: flex;">
+        <input class="msg-input" id="private" type="text" required>
+        <button class="msg_btn">Send</button>
+        </div>
+        <p style="text-align: left; font-size: 0.9em;">Whisper to <span id="private_chatter"></span></p>
+    </div>
+</form>
+</div>
+
 <div class="nick-back" id="nick-back">
     <form action="" id="nicknameform" class="container text-center">
         <div class="nick-panel">
-        <label>What's your nickname?</label>
-        <input class="input-pattern" id="nickContent" type="text" required>
+            <label>What's your nickname?</label>
+            <input class="input-pattern" id="nickContent" type="text" required>
         </div>
         <div>
-        <button class="btns" id="nick_btn">OK</button>
+            <button class="btns" id="nick_btn">OK</button>
         </div>
         <h6 id="fail-msg"></h6>
     </form>
 </div>
-{% endblock %}
-{% block dependency %}
+{% endblock %} {% block dependency %}
 <script src="/dependency/main.js"></script>
 {% endblock %}
